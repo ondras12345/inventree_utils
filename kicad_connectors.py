@@ -35,15 +35,18 @@ class InventreeHelper:
             )
 
             pin_count = int(m.group("pin_count"))
-            VARIANTS = {
-                "P": "Vertical",
-                "K": "Horizontal",
-            }
-            variant = VARIANTS[m.group("variant")]
+
+
+            if m.group("variant") == "P":
+                footprint = f"Connector_Ninigi:Ninigi_NS25_W{pin_count}P_1x{pin_count:02}_P2.54mm_Vertical"
+            elif m.group("variant") == "K":
+                footprint = f"Connector_Ninigi:Ninigi_NS25_W{pin_count}K_1x{pin_count:02}_P2.54mm_Horizontal"
+            else:
+                raise Exception("unknown variant")
 
             for param, value in [
                     ("KiCad Symbol", f"Connector:Conn_01x{pin_count:02}_Pin"),
-                    ("KiCad Footprint", f"Connector_Molex:Molex_KK-254_AE-6410-{pin_count:02}A_1x{pin_count:02}_P2.54mm_{variant}"),
+                    ("KiCad Footprint", footprint),
                     ]:
                 parameter = existing_parameters.get(param, None)
                 if parameter is not None:
